@@ -1,7 +1,9 @@
 import React from "react";
-import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 
+import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Burger from "../../components/Burger/Burger";
+import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
+import Modal from "../../components/UI/Modal/Modal";
 
 const INGREDIENT_PRCIES = {
 	salad: 0.5,
@@ -20,6 +22,7 @@ class BurgerBuilder extends React.Component {
 		},
 		totalPrice: 4,
 		purchaseble: false,
+		toOrder: false,
 	}
 
 	updatePurchaseState(ingredients) {
@@ -33,8 +36,12 @@ class BurgerBuilder extends React.Component {
 		this.setState({
 			purchaseble: sum > 0,
 		});
-		console.log('Sum: ', sum);
-		console.log(this.state.ingredients);
+	}
+
+	toOrderHandler = () => {
+		this.setState({
+			toOrder: true,
+		});
 	}
 
 	addIngredientHandler = type => {
@@ -51,7 +58,6 @@ class BurgerBuilder extends React.Component {
 			totalPrice: newPrice,
 			ingredients: updatedIngredients,
 		});
-		console.log('count: ', this.state.ingredients);
 		this.updatePurchaseState(updatedIngredients);
 	}
 
@@ -74,6 +80,16 @@ class BurgerBuilder extends React.Component {
 		});
 		this.updatePurchaseState(updatedIngredients);
 	}
+
+	purchaseCancelHandler = () => {
+		this.setState({
+			toOrder: false,
+		});
+	}
+
+	purchaseContinueHandler = () => {
+		alert('You continue!');
+	}
 	 
 	render() {
 		const disabledInfo = {
@@ -86,6 +102,15 @@ class BurgerBuilder extends React.Component {
 
 		return(
 			<>
+				<Modal
+					show={this.state.toOrder}
+					modalClosed={this.purchaseCancelHandler}>
+					<OrderSummary
+						ingredients={this.state.ingredients}
+						purchaseCancelled={this.purchaseCancelHandler}
+						purchaseContnuied={this.purchaseContinueHandler}
+						price={this.state.totalPrice.toFixed(2)}/>
+				</Modal>
 				<Burger ingredients={this.state.ingredients}/>
 				<BuildControls
 					ingredients={this.state.ingredients}
@@ -94,6 +119,7 @@ class BurgerBuilder extends React.Component {
 					disabled={disabledInfo}
 					price={this.state.totalPrice}
 					purchaseble={this.state.purchaseble}
+					toOrder={this.toOrderHandler}
 				/>
 			</>
 		);
