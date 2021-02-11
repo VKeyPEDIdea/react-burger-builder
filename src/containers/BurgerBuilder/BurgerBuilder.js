@@ -100,40 +100,40 @@ class BurgerBuilder extends React.Component {
 	}
 
 	purchaseContinueHandler = () => {
-		// alert('You continue!');
-		this.setState({
-			loading: true,
-		});
+		// this.setState({
+		// 	loading: true,
+		// });
 
-		const order = {
-			ingredients: this.state.ingredients,
-			price: this.state.totalPrice,
-			customer: {
-				name: 'Pavel Karyapkin',
-				address: {
-					country: 'Russia',
-					city: 'Moscow', 
-					street: 'Mira 1',
-					zipCode: '100000',
-				},
-				email: 'test@test.com',
-			},
-			deliveryMethod: 'courier',
-		}
+		// const order = {
+		// 	ingredients: this.state.ingredients,
+		// 	price: this.state.totalPrice,
+		// 	customer: {
+		// 		name: 'Pavel Karyapkin',
+		// 		address: {
+		// 			country: 'Russia',
+		// 			city: 'Moscow', 
+		// 			street: 'Mira 1',
+		// 			zipCode: '100000',
+		// 		},
+		// 		email: 'test@test.com',
+		// 	},
+		// 	deliveryMethod: 'courier',
+		// }
 
-		axios.post('/orders', order)
-			.then(response => {
-				this.setState({
-					loading: false,
-					toOrder: false,
-				});
-			})
-			.catch(error => {
-				this.setState({
-					loading: false,
-					toOrder: false,
-				});
-			});
+		// axios.post('/orders', order)
+		// 	.then(response => {
+		// 		this.setState({
+		// 			loading: false,
+		// 			toOrder: false,
+		// 		});
+		// 	})
+		// 	.catch(error => {
+		// 		this.setState({
+		// 			loading: false,
+		// 			toOrder: false,
+		// 		});
+		// 	});
+		this.props.history.push('/checkout');
 	}
 	 
 	render() {
@@ -189,4 +189,4 @@ class BurgerBuilder extends React.Component {
 	}
 }
 
-export default withErrorHandler(BurgerBuilder, axios);
+export default withErrorHandler(BurgerBuilder, axios); 
