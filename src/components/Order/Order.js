@@ -3,10 +3,15 @@ import React from 'react';
 import classes from './Order.module.css';
 
 const order = props => {
+	let ingredients = Object.keys(props.ingredients)
+		.map(igt => {
+			return igt + ' - ' + props.ingredients[igt] + ' / ';
+	});
+
 	return(
 		<div className={classes.Order}>
-				<p>Ingredients: </p>
-				<p>Price: <strong>USD 5.45</strong></p>
+				<p>Ingredients: {ingredients}</p>
+				<p>Price: <strong>USD {props.price}</strong></p>
 		</div>
 	);
 }
