@@ -17,6 +17,10 @@ class ContactData extends React.Component {
 					placeholder: 'Your Name'
 				},
 				value: '',
+				validation: {
+					required: true,
+					isValid: false,
+				},
 			},
 			street: {
 				elType: 'input',
@@ -26,6 +30,10 @@ class ContactData extends React.Component {
 					placeholder: 'Street'
 				},
 				value: '',
+				validation: {
+					required: true,
+					isValid: false,
+				},
 			},
 			zipCode: {
 				elType: 'input',
@@ -35,6 +43,12 @@ class ContactData extends React.Component {
 					placeholder: 'Postal Code'
 				},
 				value: '',
+				validation: {
+					required: true,
+					isValid: false,
+					minLength: 5,
+					maxLength: 6,
+				},
 			},
 			country: {
 				elType: 'input',
@@ -44,6 +58,10 @@ class ContactData extends React.Component {
 					placeholder: 'Your Country'
 				},
 				value: '',
+				validation: {
+					required: true,
+					isValid: false,
+				},
 			},
 			city: {
 				elType: 'input',
@@ -53,6 +71,10 @@ class ContactData extends React.Component {
 					placeholder: 'Your city'
 				},
 				value: '',
+				validation: {
+					required: true,
+					isValid: false,
+				},
 			}, 
 			email: {
 				elType: 'input',
@@ -62,6 +84,10 @@ class ContactData extends React.Component {
 					placeholder: 'Your email address'
 				},
 				value: '',
+				validation: {
+					required: true,
+					isValid: false,
+				},
 			},
 			deliveryMethod: {
 				elType: 'select',
@@ -84,20 +110,16 @@ class ContactData extends React.Component {
 			loading: true,
 		});
 
+		const formData = {};
+
+		for (let formElementId in this.state.orderForm) {
+			formData[formElementId] = this.state.orderForm[formElementId].value;
+		}
+
 		const order = {
 			ingredients: this.props.ingredients,
 			price: this.props.price,
-			customer: {
-				name: 'Pavel Karyapkin',
-				address: {
-					country: 'Russia',
-					city: 'Moscow', 
-					street: 'Mira 1',
-					zipCode: '100000',
-				},
-				email: 'test@test.com',
-			},
-			deliveryMethod: 'courier',
+			orderData: formData,
 		}
 
 		axios.post('/orders.json', order)
@@ -114,11 +136,31 @@ class ContactData extends React.Component {
 			});
 	}
 
+	checkValidity(value, rules) {
+		let isValid = false;
+
+		if (rules.required) {
+			isValid = value.trim() !== '';
+		}
+
+		if (rules.minLength) {
+			isValid = value.length >= rules.minLength;
+		}
+
+		if (rules.maxLength) {
+			isValid = value.length <= rules.maxLength;
+		}
+
+		return isValid;
+	}
+
 	inputChangeHandler = (event, id) => {
 		const updatedOrderForm = {...this.state.orderForm};
 		const updatedFormElement = { ...updatedOrderForm[id] };
 		updatedFormElement.value = event.target.value;
+		updatedFormElement.validation.isValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
 		updatedOrderForm[id] = updatedFormElement;
+		console.log(updatedFormElement);
 
 		this.setState({orderForm: {...updatedOrderForm}});
 	}
