@@ -114,6 +114,15 @@ class ContactData extends React.Component {
 			});
 	}
 
+	inputChangeHandler = (event, id) => {
+		const updatedOrderForm = {...this.state.orderForm};
+		const updatedFormElement = { ...updatedOrderForm[id] };
+		updatedFormElement.value = event.target.value;
+		updatedOrderForm[id] = updatedFormElement;
+
+		this.setState({orderForm: {...updatedOrderForm}});
+	}
+
 	render() {
 		let formElementsArray = [];
 		for (let key in this.state.orderForm) {
@@ -129,7 +138,8 @@ class ContactData extends React.Component {
 				elType={input.config.elType}
 				elConfig={input.config.elConfig}
 				label={input.config.elConfig.label}
-				value={input.config.value}/>
+				value={input.config.value}
+				changed={(event) => this.inputChangeHandler(event, input.id)}/>
 		});
 
 		let form = (
