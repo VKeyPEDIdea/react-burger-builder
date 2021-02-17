@@ -20,6 +20,7 @@ class ContactData extends React.Component {
 				validation: {
 					required: true,
 					isValid: false,
+					touched: false,
 				},
 			},
 			street: {
@@ -33,6 +34,7 @@ class ContactData extends React.Component {
 				validation: {
 					required: true,
 					isValid: false,
+					touched: false,
 				},
 			},
 			zipCode: {
@@ -46,6 +48,7 @@ class ContactData extends React.Component {
 				validation: {
 					required: true,
 					isValid: false,
+					touched: false,
 					minLength: 5,
 					maxLength: 6,
 				},
@@ -61,6 +64,7 @@ class ContactData extends React.Component {
 				validation: {
 					required: true,
 					isValid: false,
+					touched: false,
 				},
 			},
 			city: {
@@ -74,6 +78,7 @@ class ContactData extends React.Component {
 				validation: {
 					required: true,
 					isValid: false,
+					touched: false,
 				},
 			}, 
 			email: {
@@ -87,6 +92,7 @@ class ContactData extends React.Component {
 				validation: {
 					required: true,
 					isValid: false,
+					touched: false,
 				},
 			},
 			deliveryMethod: {
@@ -99,8 +105,13 @@ class ContactData extends React.Component {
 					]
 				},
 				value: '',
+				validation: {
+					required: false,
+					isValid: true,
+				}
 			},
 		},
+		formIsReady: false,
 		loading: false,
 	}
 
@@ -137,18 +148,18 @@ class ContactData extends React.Component {
 	}
 
 	checkValidity(value, rules) {
-		let isValid = false;
+		let isValid = true;
 
 		if (rules.required) {
-			isValid = value.trim() !== '';
+			isValid = value.trim() !== '' && isValid;
 		}
 
 		if (rules.minLength) {
-			isValid = value.length >= rules.minLength;
+			isValid = value.length >= rules.minLength && isValid;
 		}
 
 		if (rules.maxLength) {
-			isValid = value.length <= rules.maxLength;
+			isValid = value.length <= rules.maxLength && isValid;
 		}
 
 		return isValid;
@@ -159,10 +170,17 @@ class ContactData extends React.Component {
 		const updatedFormElement = { ...updatedOrderForm[id] };
 		updatedFormElement.value = event.target.value;
 		updatedFormElement.validation.isValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+		updatedFormElement.validation.touched = true;
 		updatedOrderForm[id] = updatedFormElement;
-		console.log(updatedFormElement);
+		
+		let formIsReady = true;
 
-		this.setState({orderForm: {...updatedOrderForm}});
+		for (let inputId in updatedOrderForm) {
+			formIsReady = updatedOrderForm[inputId].validation.isValid && formIsReady;
+		}
+
+		this.setState({orderForm: {...updatedOrderForm}, formIsReady});
+		console.log(this.state.formIsReady);
 	}
 
 	render() {
@@ -177,6 +195,9 @@ class ContactData extends React.Component {
 		const inputList = formElementsArray.map(input => {
 			return <Input
 				key={input.id}
+				shouldValidate={input.config.validation.required}
+				touched={input.config.validation.touched}
+				isValid={input.config.validation.isValid}
 				elType={input.config.elType}
 				elConfig={input.config.elConfig}
 				label={input.config.elConfig.label}
@@ -186,10 +207,10 @@ class ContactData extends React.Component {
 
 		let form = (
 			<form>
-				{/* <Input elType='...' elConfig='...' value='...' /> */}
 				{inputList}
 				<Button
 					btnType='Success'
+					disabled={!this.state.formIsReady}
 					clicked={this.orderHandler}>Order</Button>
 		</form>
 		);
