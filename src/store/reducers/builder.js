@@ -67,10 +67,9 @@ const reducer = (state = initialState, action) => {
 				ingredients: updatedIngredients,
 			}
 		default: 
-			break;
+			return state;
 	}
 	
-	return state;
 }
 
 export default reducer;
