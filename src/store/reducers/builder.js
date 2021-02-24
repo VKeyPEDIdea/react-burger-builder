@@ -1,4 +1,4 @@
-import * as actionTypes from '../actions'; 
+import * as actionTypes from '../actions/actionTypes'; 
 
 const INGREDIENT_PRICES = {
 	salad: 0.5,
@@ -11,6 +11,7 @@ const initialState = {
 	ingredients: null,
 	totalPrice: 0,
 	purchaseble: false,
+	error: false,
 };
 
 function updatePurchaseState(ingredients) {
@@ -60,11 +61,17 @@ const reducer = (state = initialState, action) => {
 				purchaseble: updatePurchaseState(updatedIngredients)
 			};
 
-		case actionTypes.SET_LIST_INGREDIENTS:
+		case actionTypes.INIT_LIST_INGREDIENTS:
 			updatedIngredients = action.payload.ingredients
 			return {
 				...state,
 				ingredients: updatedIngredients,
+				error: false,
+			}
+		case actionTypes.FETCH_INGREDIENTS_FAILED:
+			return {
+				...state,
+				error: true,
 			}
 		default: 
 			return state;

@@ -8,25 +8,15 @@ import axios from "../../axios-orders";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import { connect } from "react-redux";
-import * as actionTypes from '../../store/actions';
+import * as builderActions from '../../store/actions/';
 
 class BurgerBuilder extends React.Component {
 	state = {
 		toOrder: false,
-		loading: false,
-		error: false,
 	}
 
 	componentDidMount() {
-		axios.get('ingredients.json')
-			.then(response => {
-				this.props.loadIngredientsHandler(response.data);
-			})
-			.catch(error => {
-				this.setState({
-					error: true,
-				})
-			}) ;
+		this.props.initIngredientsHandler();
 	}
 
 	toOrderHandler = () => {
@@ -57,7 +47,7 @@ class BurgerBuilder extends React.Component {
 		}
 
 		let orderSummary = null;
-		let burger = this.state.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
+		let burger = this.props.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
 
 		if (this.props.ingredients) {
 			burger = (
@@ -102,23 +92,18 @@ class BurgerBuilder extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		ingredients: state.ingredients,
-		totalPrice: state.totalPrice,
-		isPurchaseble: state.purchaseble,
+		ingredients: state.burgerBuilder.ingredients,
+		totalPrice: state.burgerBuilder.totalPrice,
+		isPurchaseble: state.burgerBuilder.purchaseble,
+		error: state.burgerBuilder.error,
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return {
-		addIngredientHandler: (ingredientType) => dispatch({type: actionTypes.ADD_INGREDIENT, payload: {
-			ingredientType,
-		}}),
-		removeIngredientHandler: (ingredientType) => dispatch({type: actionTypes.REMOVE_INGREDIENT, payload: {
-			ingredientType,
-		}}),
-		loadIngredientsHandler: (ingredients) => dispatch({type: actionTypes.SET_LIST_INGREDIENTS, payload: {
-			ingredients,
-		}})
+		addIngredientHandler: (ingredientType) => dispatch(builderActions.addIngredient(ingredientType)),
+		removeIngredientHandler: (ingredientType) => dispatch(builderActions.removeIngredient(ingredientType)),
+		initIngredientsHandler: () => dispatch(builderActions.setIngredients()),
 	};
 };
 
