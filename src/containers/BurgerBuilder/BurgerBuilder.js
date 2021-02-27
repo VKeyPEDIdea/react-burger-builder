@@ -35,6 +35,7 @@ class BurgerBuilder extends React.Component {
 		this.props.history.push({
 			pathname: '/checkout',
 		});
+		this.props.settingCompleteHandler();
 	}
 	 
 	render() {
@@ -104,6 +105,7 @@ const mapDispatchToProps = dispatch => {
 		addIngredientHandler: (ingredientType) => dispatch(builderActions.addIngredient(ingredientType)),
 		removeIngredientHandler: (ingredientType) => dispatch(builderActions.removeIngredient(ingredientType)),
 		initIngredientsHandler: () => dispatch(builderActions.setIngredients()),
+		settingCompleteHandler: () => dispatch(builderActions.settingIngredientsComplete()),
 	};
 };
 

@@ -39,3 +39,9 @@ export const fetchIngredientsFailed = () => {
 		type: actionTypes.FETCH_INGREDIENTS_FAILED,
 	};
 };
+
+export const settingIngredientsComplete = () => {
+	return {
+		type: actionTypes.SETTING_INGREDIENTS_COMPLETE,
+	};
+};
