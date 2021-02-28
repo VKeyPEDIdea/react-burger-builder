@@ -10,3 +10,7 @@ export {
 	purchaseBurgerComplete,
 	fetchOrders,
 } from './order';
+
+export {
+	auth,
+} from './auth';
