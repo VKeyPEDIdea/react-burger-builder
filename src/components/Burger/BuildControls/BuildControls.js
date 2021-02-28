@@ -11,11 +11,6 @@ const controls = [
 ];
 
 const buildControls = props => {
-	// const ctrls = Object.keys(props.ingredients)
-	// 	.reduce((arr, ig) => {
-	// 		return arr.concat({ label: ig, type: ig });
-	// 	}, []);
-
 	return(
 		<div className={classes.BuildControls}>
 			<p>Current Price: <strong>{props.price.toFixed(2)}</strong></p>
