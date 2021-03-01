@@ -25,7 +25,7 @@ const authFail = (error) => {
 	};
 };
 
-const logOut = () => {
+export const logout = () => {
 	return {
 		type: actionTypes.AUTH_LOGOUT,
 	};
@@ -35,7 +35,7 @@ const checkAuthTimeout = (expirationTime) => {
 	console.log(expirationTime);
 	return dispatch => {
 		setTimeout(() => {
-			dispatch(logOut());
+			dispatch(logout());
 		}, expirationTime * 1000);
 	};
 };
@@ -75,4 +75,11 @@ export const auth = (email, password, method) => {
 				dispatch(authFail(error));
 			});
 	};
-}
+};
+
+export const setAuthRedirectPath = path => {
+	return {
+		type: actionTypes.SET_AUTH_REDIRECT_PATH,
+		path,
+	};
+};
