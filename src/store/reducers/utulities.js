@@ -38,6 +38,7 @@ export function changeIngredientCount(state, action, isAddition) {
 		ingredients: updatedIngredients,
 		totalPrice: isAddition ? oldPrice + priceDiff : oldPrice - priceDiff,
 		purchaseble: updatePurchaseState(updatedIngredients),
+		building: true,
 	}
 
 	return updatedProps;

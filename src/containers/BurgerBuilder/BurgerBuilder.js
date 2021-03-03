@@ -8,7 +8,7 @@ import axios from "../../axios-orders";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import { connect } from "react-redux";
-import * as builderActions from '../../store/actions/';
+import * as actions from '../../store/actions/';
 
 class BurgerBuilder extends React.Component {
 	state = {
@@ -20,10 +20,13 @@ class BurgerBuilder extends React.Component {
 	}
 
 	toOrderHandler = () => {
-		this.setState({
-			toOrder: true,
-		});
-	}
+		if (this.props.isAuthenticated) {
+			this.setState({	toOrder: true, });
+		} else {
+			this.props.onSetAuthRedirectPath('/checkout');
+			this.props.history.push('/auth');
+		};
+	};
 
 	purchaseCancelHandler = () => {
 		this.setState({
@@ -58,6 +61,7 @@ class BurgerBuilder extends React.Component {
 					ingredients={this.props.ingredients}
 					ingredientAdded={this.props.addIngredientHandler}
 					ingredientRemoved={this.props.removeIngredientHandler}
+					isAuthenticated={this.props.isAuthenticated}
 					disabled={disabledInfo}
 					price={this.props.totalPrice}
 					purchaseble={this.props.isPurchaseble}
@@ -97,15 +101,17 @@ const mapStateToProps = state => {
 		totalPrice: state.burgerBuilder.totalPrice,
 		isPurchaseble: state.burgerBuilder.purchaseble,
 		error: state.burgerBuilder.error,
+		isAuthenticated: state.auth.token !== null,
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return {
-		addIngredientHandler: (ingredientType) => dispatch(builderActions.addIngredient(ingredientType)),
-		removeIngredientHandler: (ingredientType) => dispatch(builderActions.removeIngredient(ingredientType)),
-		initIngredientsHandler: () => dispatch(builderActions.setIngredients()),
-		settingCompleteHandler: () => dispatch(builderActions.settingIngredientsComplete()),
+		addIngredientHandler: (ingredientType) => dispatch(actions.addIngredient(ingredientType)),
+		removeIngredientHandler: (ingredientType) => dispatch(actions.removeIngredient(ingredientType)),
+		initIngredientsHandler: () => dispatch(actions.setIngredients()),
+		settingCompleteHandler: () => dispatch(actions.settingIngredientsComplete()),
+		onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
 	};
 };
 

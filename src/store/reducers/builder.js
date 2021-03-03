@@ -9,6 +9,7 @@ const initialState = {
 	totalPrice: 0,
 	purchaseble: false,
 	error: false,
+	building: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -28,6 +29,7 @@ const reducer = (state = initialState, action) => {
 				ingredients: action.payload.ingredients,
 				error: false,
 				totalPrice: 0,
+				building: false,
 			};
 
 			return updateObject(state, updatedProps);
@@ -36,7 +38,9 @@ const reducer = (state = initialState, action) => {
 			return updateObject(state, { error: true });
 
 		case actionTypes.SETTING_INGREDIENTS_COMPLETE:
-			return updateObject(state, { purchaseble: false });
+			return updateObject(state, {
+				purchaseble: false,
+			});
 
 		default: 
 			return state;
